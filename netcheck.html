@@ -2,110 +2,125 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Network Speed Test</title>
     <script src="netcheck.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Prevent text size inflation on mobile */
+        html { -webkit-text-size-adjust: 100%; }
+        /* Smooth transitions */
+        .speed-transition { transition: all 0.3s ease; }
+    </style>
 </head>
-<body class="bg-gray-50">
-    <div class="h-[5cm] w-full flex items-center justify-center">
-        <h1 class="text-2xl font-bold mb-4"></h1>
-       <img src="images/Man Standing with Laptop and Wifi Antenna Stock Illustration - Illustration of connection, laptop_ 18149511.jpeg" alt="Network Test Illustration" class="h-[4cm] w-[4cm] object-cover rounded-lg">
-    </div>
-
-    <div class="h-[3cm] w-full flex items-center justify-center">
-        <h1 class="text-6xl font-bold text-gray-800">Your Network Status is</h1>
-    </div>
-
-    <div class="h-[8cm] w-full flex items-center justify-center space-x-20">
-        <div class="h-[7cm] w-[7cm] flex items-center justify-center rounded-lg border-4 border-blue-500 bg-white shadow-lg">
-            <h1 class="text-9xl font-bold text-blue-600" id="mainSpeed">6.3</h1>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Header Image Section -->
+    <div class="w-full flex items-center justify-center py-6 md:py-8 lg:py-10 px-4">
+        <div class="relative">
+            <img src="images/Man Standing with Laptop and Wifi Antenna Stock Illustration - Illustration of connection, laptop_ 18149511.jpeg" 
+                 alt="Network Test Illustration" 
+                 class="h-24 w-24 md:h-32 md:w-32 lg:h-40 lg:w-40 object-cover rounded-lg shadow-md">
         </div>
-        <div class="h-[7cm] w-[7cm] flex items-center justify-center flex-col space-y-9 rounded-lg border-2 border-blue-500 bg-white shadow-lg">
-            <h1 class="text-5xl font-bold text-gray-700" id="speedUnit">Mbps</h1>
-            <button class="bg-blue-500 px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors" id="rerunButton">
-                <span class="text-2xl font-bold text-white">Rerun</span>
+    </div>
+
+    <!-- Title Section -->
+    <div class="w-full flex items-center justify-center px-4 mb-6 md:mb-8">
+        <h1 class="text-2xl md:text-4xl lg:text-6xl font-bold text-gray-800 text-center leading-tight">
+            Your Network Status is
+        </h1>
+    </div>
+
+    <!-- Main Speed Display -->
+    <div class="w-full flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 lg:gap-16 px-4 mb-8 md:mb-12">
+        <!-- Speed Circle -->
+        <div class="w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 flex items-center justify-center rounded-full border-4 border-blue-500 bg-white shadow-lg speed-transition">
+            <h1 class="text-6xl md:text-7xl lg:text-9xl font-bold text-blue-600" id="mainSpeed">--</h1>
+        </div>
+        
+        <!-- Unit & Button -->
+        <div class="w-full max-w-xs md:w-64 lg:w-80 h-auto md:h-64 lg:h-80 flex items-center justify-center flex-col gap-4 md:gap-6 rounded-2xl border-2 border-blue-500 bg-white shadow-lg p-6 md:p-8">
+            <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-700" id="speedUnit">Mbps</h1>
+            <button class="w-full md:w-auto bg-blue-500 px-6 md:px-8 py-3 md:py-4 rounded-lg hover:bg-blue-600 active:bg-blue-700 transition-colors shadow-md" id="rerunButton">
+                <span class="text-lg md:text-xl lg:text-2xl font-bold text-white">Rerun Test</span>
             </button>
         </div>
     </div>
 
-    <div class="h-[4cm] w-full flex items-center justify-center space-x-20">
-        <div class="h-[4cm] w-[4cm] flex items-center justify-center flex-col space-y-5 rounded-lg border-2 border-green-500 bg-white shadow-md">
-            <h1 class="text-2xl font-bold text-gray-700">Unloaded</h1>
-            <h1 class="text-3xl font-bold text-green-600" id="unloadedLatency">12ms</h1>
+    <!-- Stats Grid -->
+    <div class="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8 px-4 mb-8">
+        <!-- Unloaded Latency -->
+        <div class="flex flex-col items-center justify-center p-6 rounded-xl border-2 border-green-500 bg-white shadow-md hover:shadow-lg transition-shadow">
+            <h2 class="text-lg md:text-xl font-bold text-gray-700 mb-2">Unloaded</h2>
+            <p class="text-2xl md:text-3xl font-bold text-green-600" id="unloadedLatency">--ms</p>
+            <p class="text-xs md:text-sm text-gray-500 mt-1">Idle latency</p>
         </div>
-        <div class="h-[4cm] w-[4cm] flex items-center justify-center flex-col space-y-5 rounded-lg border-2 border-yellow-500 bg-white shadow-md">
-            <h1 class="text-2xl font-bold text-gray-700">Loaded</h1>
-            <h1 class="text-3xl font-bold text-yellow-600" id="loadedLatency">50ms</h1>
+
+        <!-- Loaded Latency -->
+        <div class="flex flex-col items-center justify-center p-6 rounded-xl border-2 border-yellow-500 bg-white shadow-md hover:shadow-lg transition-shadow">
+            <h2 class="text-lg md:text-xl font-bold text-gray-700 mb-2">Loaded</h2>
+            <p class="text-2xl md:text-3xl font-bold text-yellow-600" id="loadedLatency">--ms</p>
+            <p class="text-xs md:text-sm text-gray-500 mt-1">Under load</p>
         </div>
-        <div class="h-[4cm] w-[4cm] flex items-center justify-center flex-col space-y-5 rounded-lg border-2 border-purple-500 bg-white shadow-md">
-            <h1 class="text-2xl font-bold text-gray-700">Speed</h1>
-            <h1 class="text-3xl font-bold text-purple-600" id="speedValue">6.3mbps</h1>
+
+        <!-- Speed Value -->
+        <div class="flex flex-col items-center justify-center p-6 rounded-xl border-2 border-purple-500 bg-white shadow-md hover:shadow-lg transition-shadow">
+            <h2 class="text-lg md:text-xl font-bold text-gray-700 mb-2">Download</h2>
+            <p class="text-2xl md:text-3xl font-bold text-purple-600" id="speedValue">--</p>
+            <p class="text-xs md:text-sm text-gray-500 mt-1">Megabits per second</p>
         </div>
     </div>
 
-    <div class="h-[1cm] flex items-center justify-center space-x-10 rounded-lg border-2 border-gray-300 bg-white mx-4 my-4 p-4">
-        <div>
-            <h1 class="text-gray-600" id="clientInfo">
-                Client Abababubu, NG 102.89.75.164
-            </h1>
-        </div>
-        <div>
-            <h1 class="text-gray-600" id="serverInfo">
-                Server(s) Asaba, NG | Ibadan, NG | Ikoyi, NG
-            </h1>
+    <!-- Connection Info -->
+    <div class="w-full max-w-4xl mx-auto mx-4 md:mx-auto mb-6 px-4">
+        <div class="flex flex-col md:flex-row items-center justify-center gap-2 md:gap-8 p-4 rounded-lg border-2 border-gray-200 bg-white text-center md:text-left">
+            <div class="text-sm md:text-base text-gray-600" id="clientInfo">
+                <span class="font-semibold">Client:</span> Detecting...
+            </div>
+            <div class="hidden md:block w-px h-4 bg-gray-300"></div>
+            <div class="text-sm md:text-base text-gray-600" id="serverInfo">
+                <span class="font-semibold">Servers:</span> Auto-selected
+            </div>
         </div>
     </div>
 
-    <div class="h-[1.5cm] flex items-center justify-center space-x-10">
-        <button class="bg-white px-4 py-2 rounded-lg border-2 border-gray-300 hover:bg-gray-50 transition-colors">
-            <a href="#" class="text-2xl font-bold text-gray-700" id="settingsButton">Settings</a>
+    <!-- Settings Button -->
+    <div class="w-full flex items-center justify-center pb-8 px-4">
+        <button class="w-full max-w-xs md:w-auto bg-white px-6 py-3 rounded-lg border-2 border-gray-300 hover:bg-gray-50 active:bg-gray-100 transition-colors shadow-sm" id="settingsButton">
+            <span class="text-base md:text-lg font-bold text-gray-700">Settings</span>
         </button>
     </div>
 
-    <!-- Loading Overlay (hidden by default) -->
-    <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
-        <div class="bg-white p-6 rounded-lg shadow-xl">
-            <h2 class="text-2xl font-bold mb-4">Testing Network Speed...</h2>
-            <div class="w-64 h-2 bg-gray-200 rounded-full overflow-hidden">
-                <div class="h-full bg-blue-500 animate-pulse" style="width: 100%"></div>
-            </div>
-            <p class="text-center mt-4 text-gray-600" id="loadingMessage">Measuring download speed...</p>
+    <!-- Status Indicator -->
+    <div class="fixed bottom-4 left-0 right-0 flex justify-center pointer-events-none">
+        <div id="testStatus" class="text-xs md:text-sm text-gray-500 bg-white/90 px-4 py-2 rounded-full shadow-sm backdrop-blur-sm">
+            Ready
         </div>
     </div>
-    <div id="testStatus" class="text-sm text-gray-500 mb-2">Detecting...</div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
+        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-2xl max-w-sm w-full mx-4">
+            <h2 class="text-xl md:text-2xl font-bold mb-4 text-center">Testing Network...</h2>
+            <div class="w-full h-3 bg-gray-200 rounded-full overflow-hidden mb-4">
+                <div id="progressBar" class="h-full bg-blue-500 transition-all duration-300" style="width: 0%"></div>
+            </div>
+            <p class="text-center text-gray-600 text-sm md:text-base" id="loadingMessage">Initializing...</p>
+        </div>
+    </div>
 
     <script>
-        // Additional initialization if needed
         document.addEventListener('DOMContentLoaded', function() {
-            // Add click handler for settings button
+            // Settings button handler
             document.getElementById('settingsButton').addEventListener('click', function(e) {
                 e.preventDefault();
-                alert('Settings panel would open here. You could configure: \n- Test server selection\n- Test duration\n- Units (Mbps/MBps)\n- Auto-run on page load');
+                alert('Settings:\n- Server selection\n- Test duration\n- Units (Mbps/MBps)\n- Auto-run');
             });
-        });
-        
-    // Super simple speed test
-    document.addEventListener('DOMContentLoaded', function() {
-        // Show some random but realistic numbers
-        document.querySelector('.border-red-300 .text-9xl').textContent = '25.3';
-        document.querySelectorAll('.border-green-300 .text-3xl')[0].textContent = '12ms';
-        document.querySelectorAll('.border-green-300 .text-3xl')[1].textContent = '45ms';
-        document.querySelectorAll('.border-green-300 .text-3xl')[2].textContent = '25.3mbps';
-        
-        // Make rerun button show different random numbers
-        document.querySelector('a[href="netcheck.html"]').addEventListener('click', function(e) {
-            e.preventDefault();
-            const speeds = ['6.3', '15.2', '25.7', '32.1', '8.4', '12.3'];
-            const randomSpeed = speeds[Math.floor(Math.random() * speeds.length)];
-            
-            document.querySelector('.border-red-300 .text-9xl').textContent = randomSpeed;
-            document.querySelectorAll('.border-green-300 .text-3xl')[2].textContent = randomSpeed + 'mbps';
-            document.querySelectorAll('.border-green-300 .text-3xl')[0].textContent = Math.floor(Math.random() * 30 + 10) + 'ms';
-            document.querySelectorAll('.border-green-300 .text-3xl')[1].textContent = Math.floor(Math.random() * 80 + 20) + 'ms';
-        });
-    });
 
+            // Initialize speed test if available
+            if (typeof speedTest !== 'undefined') {
+                setTimeout(() => speedTest.start(), 500);
+            }
+        });
     </script>
 </body>
 </html>
