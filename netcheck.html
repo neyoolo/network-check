@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Speed Test</title>
+    <script src="netcheck.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="h-[5cm] w-full flex items-center justify-center">
+        <h1 class="text-2xl font-bold mb-4"></h1>
+       <img src="images/Man Standing with Laptop and Wifi Antenna Stock Illustration - Illustration of connection, laptop_ 18149511.jpeg" alt="Network Test Illustration" class="h-[4cm] w-[4cm] object-cover rounded-lg">
+    </div>
+
+    <div class="h-[3cm] w-full flex items-center justify-center">
+        <h1 class="text-6xl font-bold text-gray-800">Your Network Status is</h1>
+    </div>
+
+    <div class="h-[8cm] w-full flex items-center justify-center space-x-20">
+        <div class="h-[7cm] w-[7cm] flex items-center justify-center rounded-lg border-4 border-blue-500 bg-white shadow-lg">
+            <h1 class="text-9xl font-bold text-blue-600" id="mainSpeed">6.3</h1>
+        </div>
+        <div class="h-[7cm] w-[7cm] flex items-center justify-center flex-col space-y-9 rounded-lg border-2 border-blue-500 bg-white shadow-lg">
+            <h1 class="text-5xl font-bold text-gray-700" id="speedUnit">Mbps</h1>
+            <button class="bg-blue-500 px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors" id="rerunButton">
+                <span class="text-2xl font-bold text-white">Rerun</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="h-[4cm] w-full flex items-center justify-center space-x-20">
+        <div class="h-[4cm] w-[4cm] flex items-center justify-center flex-col space-y-5 rounded-lg border-2 border-green-500 bg-white shadow-md">
+            <h1 class="text-2xl font-bold text-gray-700">Unloaded</h1>
+            <h1 class="text-3xl font-bold text-green-600" id="unloadedLatency">12ms</h1>
+        </div>
+        <div class="h-[4cm] w-[4cm] flex items-center justify-center flex-col space-y-5 rounded-lg border-2 border-yellow-500 bg-white shadow-md">
+            <h1 class="text-2xl font-bold text-gray-700">Loaded</h1>
+            <h1 class="text-3xl font-bold text-yellow-600" id="loadedLatency">50ms</h1>
+        </div>
+        <div class="h-[4cm] w-[4cm] flex items-center justify-center flex-col space-y-5 rounded-lg border-2 border-purple-500 bg-white shadow-md">
+            <h1 class="text-2xl font-bold text-gray-700">Speed</h1>
+            <h1 class="text-3xl font-bold text-purple-600" id="speedValue">6.3mbps</h1>
+        </div>
+    </div>
+
+    <div class="h-[1cm] flex items-center justify-center space-x-10 rounded-lg border-2 border-gray-300 bg-white mx-4 my-4 p-4">
+        <div>
+            <h1 class="text-gray-600" id="clientInfo">
+                Client Abababubu, NG 102.89.75.164
+            </h1>
+        </div>
+        <div>
+            <h1 class="text-gray-600" id="serverInfo">
+                Server(s) Asaba, NG | Ibadan, NG | Ikoyi, NG
+            </h1>
+        </div>
+    </div>
+
+    <div class="h-[1.5cm] flex items-center justify-center space-x-10">
+        <button class="bg-white px-4 py-2 rounded-lg border-2 border-gray-300 hover:bg-gray-50 transition-colors">
+            <a href="#" class="text-2xl font-bold text-gray-700" id="settingsButton">Settings</a>
+        </button>
+    </div>
+
+    <!-- Loading Overlay (hidden by default) -->
+    <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-xl">
+            <h2 class="text-2xl font-bold mb-4">Testing Network Speed...</h2>
+            <div class="w-64 h-2 bg-gray-200 rounded-full overflow-hidden">
+                <div class="h-full bg-blue-500 animate-pulse" style="width: 100%"></div>
+            </div>
+            <p class="text-center mt-4 text-gray-600" id="loadingMessage">Measuring download speed...</p>
+        </div>
+    </div>
+    <div id="testStatus" class="text-sm text-gray-500 mb-2">Detecting...</div>
+
+    <script>
+        // Additional initialization if needed
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click handler for settings button
+            document.getElementById('settingsButton').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Settings panel would open here. You could configure: \n- Test server selection\n- Test duration\n- Units (Mbps/MBps)\n- Auto-run on page load');
+            });
+        });
+        
+    // Super simple speed test
+    document.addEventListener('DOMContentLoaded', function() {
+        // Show some random but realistic numbers
+        document.querySelector('.border-red-300 .text-9xl').textContent = '25.3';
+        document.querySelectorAll('.border-green-300 .text-3xl')[0].textContent = '12ms';
+        document.querySelectorAll('.border-green-300 .text-3xl')[1].textContent = '45ms';
+        document.querySelectorAll('.border-green-300 .text-3xl')[2].textContent = '25.3mbps';
+        
+        // Make rerun button show different random numbers
+        document.querySelector('a[href="netcheck.html"]').addEventListener('click', function(e) {
+            e.preventDefault();
+            const speeds = ['6.3', '15.2', '25.7', '32.1', '8.4', '12.3'];
+            const randomSpeed = speeds[Math.floor(Math.random() * speeds.length)];
+            
+            document.querySelector('.border-red-300 .text-9xl').textContent = randomSpeed;
+            document.querySelectorAll('.border-green-300 .text-3xl')[2].textContent = randomSpeed + 'mbps';
+            document.querySelectorAll('.border-green-300 .text-3xl')[0].textContent = Math.floor(Math.random() * 30 + 10) + 'ms';
+            document.querySelectorAll('.border-green-300 .text-3xl')[1].textContent = Math.floor(Math.random() * 80 + 20) + 'ms';
+        });
+    });
+
+    </script>
+</body>
+</html>
